@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, g
 import mysql.connector
 from mail_setup import mail
@@ -7,21 +8,21 @@ from routes.worker_routes import worker_routes
 from routes.central_routes import central_routes
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+app.secret_key = os.environ.get('SECRET_KEY', 'your_secret_key')
 
-# MySQL config
-app.config['MYSQL_HOST'] = '127.0.0.1'
-app.config['MYSQL_PORT'] = 3306
-app.config['MYSQL_USER'] = 'your_username'
-app.config['MYSQL_PASSWORD'] = 'your_password'
-app.config['MYSQL_DB'] = 'your_database'
+# MySQL config from environment variables
+app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST', '127.0.0.1')
+app.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT', 3306))
+app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER', 'your_username')
+app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD', 'your_password')
+app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB', 'your_database')
 
-# Mail Config
+# Mail config from environment variables
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'swachhindiamission@gmail.com'
-app.config['MAIL_PASSWORD'] = 'kgqh ygmw fdrc tnxx'  # Use your app password
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'swachhindiamission@gmail.com')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 'your_mail_password')
 
 # Initialize mail
 mail.init_app(app)
@@ -43,9 +44,6 @@ def close_db(error):
     db = g.pop('db', None)
     if db is not None:
         db.close()
-
-# Pass get_db function to blueprints so they can get DB connections
-# For example, in your blueprint routes, you can import `current_app` and call `get_db()` directly
 
 # Register blueprints
 app.register_blueprint(user_routes, url_prefix='/user')
@@ -69,4 +67,5 @@ def prevent_caching(response):
     return response
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
