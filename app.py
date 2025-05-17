@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from flask_mysqldb import MySQL  # <-- import MySQL extension here
 from mail_setup import mail
 from routes.user_routes import user_routes
 from routes.staff_routes import staff_routes
@@ -7,6 +8,16 @@ from routes.central_routes import central_routes
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
+
+# MySQL config - ADD this block here:
+app.config['MYSQL_HOST'] = '127.0.0.1'
+app.config['MYSQL_PORT'] = 3306
+app.config['MYSQL_USER'] = 'your_username'
+app.config['MYSQL_PASSWORD'] = 'your_password'
+app.config['MYSQL_DB'] = 'your_database'
+
+# Initialize MySQL extension
+mysql = MySQL(app)
 
 # Mail Config
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -43,5 +54,4 @@ def prevent_caching(response):
     return response
 
 if __name__ == '__main__':
-    # Run the Flask app in debug mode
     app.run(debug=True)
