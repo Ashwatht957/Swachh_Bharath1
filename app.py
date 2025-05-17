@@ -8,26 +8,25 @@ from routes.worker_routes import worker_routes
 from routes.central_routes import central_routes
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY', 'your_secret_key')
+app.secret_key = os.environ.get('SECRET_KEY', 'fallback_secret_key')
 
-# MySQL config from environment variables
+# MySQL config from env variables
 app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST', '127.0.0.1')
 app.config['MYSQL_PORT'] = int(os.environ.get('MYSQL_PORT', 3306))
-app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER', 'your_username')
-app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD', 'your_password')
-app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB', 'your_database')
+app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER', 'user')
+app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD', 'password')
+app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB', 'database')
 
-# Mail config from environment variables
+# Mail config from env variables
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'swachhindiamission@gmail.com')
-app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 'your_mail_password')
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 
 # Initialize mail
 mail.init_app(app)
 
-# Database connection per request
 def get_db():
     if 'db' not in g:
         g.db = mysql.connector.connect(
@@ -67,5 +66,4 @@ def prevent_caching(response):
     return response
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(debug=True)
