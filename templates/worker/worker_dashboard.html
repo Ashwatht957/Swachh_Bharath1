@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Worker Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: url('https://img.freepik.com/free-photo/blue-surface-with-study-tools_23-2147864592.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      margin-top: 30px;
+      max-width: 1000px;
+      overflow-x: auto; /* allow horizontal scroll on narrow screens */
+    }
+
+    h1,
+    h3 {
+      color: #333;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+      margin-bottom: 20px;
+    }
+
+    .logout-button {
+      background-color: #d9534f;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .logout-button:hover {
+      background-color: #c9302c;
+      color: white;
+      text-decoration: none;
+    }
+
+    .btn-visited {
+      background-color: #198754;
+      color: white;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      display: block;
+      width: 220px;
+      margin-left: auto;
+      margin-right: auto;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .btn-visited:hover {
+      background-color: #157347;
+      color: white;
+    }
+
+    img.user-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    .message {
+      padding: 12px 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      font-size: 15px;
+    }
+
+    .message.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .message.danger {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .message.info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .no-data {
+      text-align: center;
+      font-size: 18px;
+      color: #a94442;
+      margin-top: 20px;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 20px;
+        margin-top: 15px;
+        max-width: 100%;
+      }
+
+      img.user-image {
+        width: 70px;
+        height: 70px;
+      }
+
+      .btn-visited {
+        width: 100%;
+        font-size: 1rem;
+        padding: 12px;
+      }
+
+      table {
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      img.user-image {
+        width: 50px;
+        height: 50px;
+      }
+
+      .btn-visited {
+        padding: 10px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="d-flex justify-content-end mb-3">
+      <a href="{{ url_for('worker_routes.worker_logout') }}" class="logout-button">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+
+    <h1 class="text-center">Worker Dashboard</h1>
+    <h3 class="text-center mb-4">Worker Progress Overview</h3>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="message {{ category }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% if worker_data %}
+    <form method="POST" novalidate>
+      <table class="table table-hover table-bordered align-middle" style="min-width:600px;">
+        <thead class="table-success text-center">
+          <tr>
+            <th>Select</th>
+            <th>Name</th>
+            <th>Longitude</th>
+            <th>Latitude</th>
+            <th>Image</th>
+            <th>Ward Name</th>
+            <th>Google Maps</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for worker in worker_data %}
+          <tr>
+            <td class="text-center">
+              <input type="checkbox" name="visited_ids" value="{{ worker['id'] }}">
+            </td>
+            <td>{{ worker['name'] }}</td>
+            <td>{{ worker['longitude'] }}</td>
+            <td>{{ worker['latitude'] }}</td>
+            <td class="text-center">
+              {% if worker['image'] %}
+              <img class="user-image" src="data:image/jpeg;base64,{{ worker['image'] }}" alt="User Image" />
+              {% else %}
+              No Image
+              {% endif %}
+            </td>
+            <td>{{ worker['ward_name'] }}</td>
+            <td class="text-center">
+              <a href="https://www.google.com/maps/search/?api=1&query={{ worker['latitude'] }},{{ worker['longitude'] }}"
+                target="_blank" class="btn btn-outline-success btn-sm">
+                <i class="fas fa-map-marker-alt"></i> View
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <button type="submit" class="btn-visited">Mark as Visited</button>
+    </form>
+    {% else %}
+    <div class="no-data">No user data found for your ward.</div>
+    {% endif %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Admin Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f0f2f5;
+        display: flex;
+        min-height: 100vh;
+        flex-direction: row;
+    }
+
+    /* Sidebar for desktop */
+    .sidebar {
+        width: 240px;
+        background-color: #2c3e50;
+        color: white;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        padding-top: 30px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar h2 {
+        text-align: center;
+        font-size: 22px;
+        margin-bottom: 40px;
+    }
+
+    .sidebar a {
+        display: block;
+        padding: 14px 30px;
+        color: #ecf0f1;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background 0.3s;
+    }
+
+    .sidebar a:hover {
+        background-color: #34495e;
+    }
+
+    /* Main content */
+    .main {
+        margin-left: 240px;
+        padding: 40px 30px;
+        background: #f9f9f9;
+        flex-grow: 1;
+    }
+
+    h1 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    .stats-cards {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .card {
+        flex: 1 1 220px;
+        background-color: #3498db;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        min-width: 220px;
+    }
+
+    .card.orange { background-color: #e67e22; }
+    .card.green { background-color: #2ecc71; }
+
+    .card h2 {
+        margin: 0;
+        font-size: 36px;
+    }
+
+    .card p {
+        margin: 5px 0 0;
+    }
+
+    .btn {
+        background-color: #27ae60;
+        color: white;
+        padding: 10px 16px;
+        margin-top: 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn:hover {
+        background-color: #1e8449;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 30px;
+    }
+
+    table, th, td {
+        border: 1px solid #ccc;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #2c3e50;
+        color: white;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 767px) {
+        body {
+            flex-direction: column;
+        }
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: row;
+            overflow-x: auto;
+        }
+        .sidebar h2 {
+            flex: 1 0 auto;
+            margin: 0 20px 0 15px;
+            font-size: 18px;
+            text-align: left;
+            white-space: nowrap;
+            align-self: center;
+        }
+        .sidebar a {
+            flex: 0 0 auto;
+            padding: 10px 15px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        .main {
+            margin-left: 0;
+            padding: 20px 15px;
+        }
+        .stats-cards {
+            flex-direction: column;
+        }
+        .card {
+            min-width: auto;
+            width: 100%;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2>Admin Panel</h2>
+    <a href="{{ url_for('staff_routes.admin_dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('staff_routes.worker_details') }}">Reached Locations</a>
+    <a href="{{ url_for('staff_routes.add_new_staff') }}">Add new worker</a>
+    <a href="{{ url_for('staff_routes.view_user_data') }}">Registered Locations</a>
+    <a href="{{ url_for('staff_routes.staff_table') }}">Working Staff</a>
+    <a href="{{ url_for('staff_routes.admin_logout') }}">Logout</a>
+</div>
+
+<!-- Main Content -->
+<div class="main">
+    <h1>Welcome, Admin</h1>
+
+    <div class="stats-cards">
+        <div class="card">
+            <h2>{{ staff_count }}</h2>
+            <p>Total Staff</p>
+        </div>
+        <div class="card orange">
+            <h2>{{ worker_details_count }}</h2>
+            <p>Submitted Locations</p>
+        </div>
+        <div class="card green">
+            <h2>{{ user_data_count }}</h2>
+            <p>Registered Locations</p>
+        </div>
+    </div>
+
+    <!-- You can add your table or other content here -->
+
+</div>
+
+</body>
+</html>

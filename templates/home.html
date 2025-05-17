@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Web Application Portal | Swachh Bharat Abhiyan</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/home_styles.css') }}" />
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+    h1,
+    h2,
+    h3 {
+      font-family: 'Montserrat', sans-serif;
+    }
+    .hero {
+      background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+      color: white;
+      padding: 6rem 1rem; /* Reduced vertical padding for smaller screens */
+    }
+    .hero p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+    }
+    @media (max-width: 575.98px) {
+      .navbar-brand {
+        font-size: 1rem;
+      }
+      .nav-link,
+      .btn-danger {
+        margin-left: 0;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .navbar-nav {
+        flex-direction: column !important;
+        align-items: flex-start;
+      }
+    }
+    .section-title {
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #007bff;
+    }
+    footer {
+      background-color: #007bff;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    .card {
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">Web Application Portal For Assistance Of Swachh Bharat Abhiyan</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav align-items-lg-center">
+          <li class="nav-item">
+            <a class="btn btn-danger mx-lg-2 my-1 my-lg-0" href="{{ url_for('user_routes.home') }}">Register a complaint</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-danger mx-lg-2 my-1 my-lg-0" href="{{ url_for('central_routes.central_login') }}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-danger mx-lg-2 my-1 my-lg-0" href="{{ url_for('about') }}">About</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero text-center">
+    <div class="container">
+      <h1 class="display-4">Swachh Bharat Abhiyan</h1>
+      <p class="lead">
+        A step towards a cleaner and greener India through citizen participation.
+      </p>
+    </div>
+  </header>
+
+  <!-- What is Swachh Bharat Abhiyan? -->
+  <section class="container py-5">
+    <h2 class="section-title text-center">What is Swachh Bharat Abhiyan?</h2>
+    <p class="text-center mb-5">
+      Swachh Bharat Abhiyan (Clean India Mission) is a national initiative launched by the Government of India on October 2,
+      2014, aiming to promote cleanliness, sanitation, and proper waste management across the country.
+    </p>
+
+    <div class="row text-center">
+      <div class="col-md-4 mb-4">
+        <h5>Objectives</h5>
+        <p>Eliminate open defecation, improve waste management, and raise hygiene awareness.</p>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h5>Key Focus Areas</h5>
+        <ul class="list-unstyled">
+          <li>✅ Construction of toilets</li>
+          <li>✅ Waste management systems</li>
+          <li>✅ Public awareness campaigns</li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h5>Citizen Participation</h5>
+        <p>Every citizen plays a vital role by keeping surroundings clean and spreading awareness.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Citizen Participation Section -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="section-title text-center">How Citizens Can Participate</h2>
+      <p class="text-center lead mb-5">Your active involvement is essential for a cleaner India. Here’s how you can contribute:</p>
+
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card p-4 shadow-sm h-100">
+            <h4>1. Identify an Unclean Area</h4>
+            <p>Observe and report places that need cleaning in your neighborhood, streets, or public areas.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-4 shadow-sm h-100">
+            <h4>2. Report the Location</h4>
+            <p>Inform local authorities or use our portal to submit dirty location details and images.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card p-4 shadow-sm h-100">
+            <h4>3. Spread Awareness</h4>
+            <p>Encourage friends, family, and neighbors to participate in cleanliness drives and events.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-3">
+    <div class="container">
+      <p>© 2025 Web Application Portal for Swachh Bharat Abhiyan | All Rights Reserved</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
