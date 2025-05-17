@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-from flask_mysqldb import MySQL  # <-- import MySQL extension here
+from flask import Flask, render_template, g
+import mysql.connector
 from mail_setup import mail
 from routes.user_routes import user_routes
 from routes.staff_routes import staff_routes
@@ -9,43 +9,58 @@ from routes.central_routes import central_routes
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-# MySQL config - ADD this block here:
+# MySQL config
 app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_PORT'] = 3306
 app.config['MYSQL_USER'] = 'your_username'
 app.config['MYSQL_PASSWORD'] = 'your_password'
 app.config['MYSQL_DB'] = 'your_database'
 
-# Initialize MySQL extension
-mysql = MySQL(app)
-
 # Mail Config
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'swachhindiamission@gmail.com'
-app.config['MAIL_PASSWORD'] = 'kgqh ygmw fdrc tnxx'  # Replace with your app password
+app.config['MAIL_PASSWORD'] = 'kgqh ygmw fdrc tnxx'  # Use your app password
 
-# Initialize mail object
+# Initialize mail
 mail.init_app(app)
 
-# Register blueprints for each module
+# Database connection per request
+def get_db():
+    if 'db' not in g:
+        g.db = mysql.connector.connect(
+            host=app.config['MYSQL_HOST'],
+            port=app.config['MYSQL_PORT'],
+            user=app.config['MYSQL_USER'],
+            password=app.config['MYSQL_PASSWORD'],
+            database=app.config['MYSQL_DB']
+        )
+    return g.db
+
+@app.teardown_appcontext
+def close_db(error):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
+
+# Pass get_db function to blueprints so they can get DB connections
+# For example, in your blueprint routes, you can import `current_app` and call `get_db()` directly
+
+# Register blueprints
 app.register_blueprint(user_routes, url_prefix='/user')
 app.register_blueprint(staff_routes, url_prefix='/staff')
 app.register_blueprint(worker_routes, url_prefix='/worker')
 app.register_blueprint(central_routes, url_prefix='/central')
 
-# Home route
 @app.route('/')
 def index():
     return render_template('home.html')
 
-# About route
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-# Prevent caching for all responses
 @app.after_request
 def prevent_caching(response):
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, private'
